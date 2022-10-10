@@ -1,4 +1,7 @@
 #include "robot.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 void setup_robot(struct Robot *robot){
     robot->x = OVERALL_WINDOW_WIDTH/2-50;
@@ -325,9 +328,56 @@ void robotMotorMove(struct Robot * robot, int crashed) {
     robot->y = (int) y_offset;
 }
 
+int prev_front;
+int prev_left;
+int prev_right;
+
+
+int forwardInterruptTimer;
+int leftInterruptTimer;
+int rightInterruptTimer;
+
 void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_sensor, int right_sensor) {
 
-    if (front_centre_sensor == 0) {
+    if (forwardInterruptTimer != 0) {
+        forwardInterruptTimer--;
+        robot->direction = UP;
+    }
+
+    else if (rightInterruptTimer != 0) {
+        rightInterruptTimer--;
+        robot->direction = RIGHT;
+    }
+
+    else if (leftInterruptTimer != 0) {
+        leftInterruptTimer--;
+        robot->direction = LEFT;
+    }
+
+
+    else if (front_centre_sensor != 0) {
+        if (left_sensor <= right_sensor) {
+            robot->direction = LEFT;
+        }
+        else {
+            robot->direction = RIGHT;
+        }
+    }
+    else if (abs(left_sensor - prev_left) > 2) {
+        forwardInterruptTimer = 2;
+        leftInterruptTimer = 6;
+    }
+    else if (abs(right_sensor - prev_right) > 2) {
+        forwardInterruptTimer = 2;
+        rightInterruptTimer = 6;
+    }
+    else if (left_sensor == 4) {
+        robot->direction = RIGHT;
+    }
+    else if (right_sensor == 4) {
+        robot->direction = LEFT;
+    }
+    else if (front_centre_sensor == 0) {
         if (robot->currentSpeed<2)
             robot->direction = UP;
     }
@@ -337,10 +387,14 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
     else if ((robot->currentSpeed==0) && ((front_centre_sensor >= 1) && (left_sensor == 0)) ) {
         robot->direction = LEFT;
     }
-    else if ((robot->currentSpeed>0) && ((right_sensor >= 1)) ) {
+    else if ((robot->currentSpeed>0) && ((right_sensor >= 2)) ) {
         robot->direction = LEFT;
     }
-    else if ((robot->currentSpeed>0) && ((left_sensor >= 1)) ) {
+    else if ((robot->currentSpeed>0) && ((left_sensor >= 2)) ) {
         robot->direction = RIGHT;
     }
+
+    prev_front = front_centre_sensor;
+    prev_left = left_sensor;
+    prev_right = right_sensor;
 }
