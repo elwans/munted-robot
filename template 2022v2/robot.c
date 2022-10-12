@@ -341,6 +341,17 @@ int counter = 0;
 
 
 void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_sensor, int right_sensor) {
+    int r = rand() % 100;
+    if(front_centre_sensor == 0){
+    if(left_sensor == 0 && right_sensor == 0 && robot->currentSpeed < 3){
+            robot->direction = UP;
+            }
+        else if(left_sensor == 0 && right_sensor == 0){
+            if(r < 5){
+                robot->direction = LEFT;
+            }
+
+     }}
 
     if (forwardInterruptTimer != 0) {
         forwardInterruptTimer--;
