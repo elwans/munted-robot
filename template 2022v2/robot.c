@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 void setup_robot(struct Robot *robot){
     robot->x = OVERALL_WINDOW_WIDTH/2-50;
@@ -339,8 +340,11 @@ int rightInterruptTimer = 0;
 
 int counter = 0;
 
+bool wallFound = false;
+
 
 void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_sensor, int right_sensor) {
+    if (!wallFound) {
     int r = rand() % 100;
     if(front_centre_sensor == 0){
     if(left_sensor == 0 && right_sensor == 0 && robot->currentSpeed < 3){
@@ -352,6 +356,7 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
             }
 
      }}
+    }
 
     if (forwardInterruptTimer != 0) {
         forwardInterruptTimer--;
