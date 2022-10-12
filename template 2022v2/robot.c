@@ -328,14 +328,17 @@ void robotMotorMove(struct Robot * robot, int crashed) {
     robot->y = (int) y_offset;
 }
 
-int prev_front;
-int prev_left;
-int prev_right;
+int prev_front = 2;
+int prev_left = 2;
+int prev_right = 2;
 
 
-int forwardInterruptTimer;
-int leftInterruptTimer;
-int rightInterruptTimer;
+int forwardInterruptTimer = 0;
+int leftInterruptTimer = 0;
+int rightInterruptTimer = 0;
+
+int counter = 0;
+
 
 void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_sensor, int right_sensor) {
 
