@@ -341,22 +341,37 @@ int rightInterruptTimer = 0;
 int counter = 0;
 
 bool wallFound = false;
+bool leftWall = true;
 
 
 void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_sensor, int right_sensor) {
+
     if (!wallFound) {
+
+        if (left_sensor >= right_sensor) {
+            leftWall = true;
+            wallFound = true;
+        }
+        else {
+            leftWall = false;
+            wallFound = true;
+        }
+    }
+
     int r = rand() % 100;
     if(front_centre_sensor == 0){
     if(left_sensor == 0 && right_sensor == 0 && robot->currentSpeed < 3){
             robot->direction = UP;
             }
         else if(left_sensor == 0 && right_sensor == 0){
-            if(r < 5){
+            if(r < 8){
+                if (leftWall)
                 robot->direction = LEFT;
+                else
+                robot->direction = RIGHT;
             }
 
      }}
-    }
 
     if (forwardInterruptTimer != 0) {
         forwardInterruptTimer--;
