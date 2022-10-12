@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     struct Robot robot;
     struct Wall_collection *head = NULL;
-    int front_centre_sensor, left_sensor, right_sensor=0;
+    int front_centre_sensor, left_sensor, right_sensor=2;
     clock_t start_time, end_time;
     int msec;
     int crashed = 0;

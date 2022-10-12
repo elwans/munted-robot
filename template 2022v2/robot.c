@@ -362,11 +362,11 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
             robot->direction = RIGHT;
         }
     }
-    else if (abs(left_sensor - prev_left) > 2) {
+    else if ((prev_left - left_sensor) > 2) {
         forwardInterruptTimer = 2;
         leftInterruptTimer = 6;
     }
-    else if (abs(right_sensor - prev_right) > 2) {
+    else if ((prev_right - right_sensor) > 2) {
         forwardInterruptTimer = 2;
         rightInterruptTimer = 6;
     }
