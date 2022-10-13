@@ -329,9 +329,9 @@ void robotMotorMove(struct Robot * robot, int crashed) {
     robot->y = (int) y_offset;
 }
 
-int prev_front = 2;
-int prev_left = 2;
-int prev_right = 2;
+int prev_front;
+int prev_left;
+int prev_right;
 
 
 int forwardInterruptTimer = 0;
@@ -348,30 +348,48 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
 
     if (!wallFound) {
 
-        if (left_sensor >= right_sensor) {
+        if (left_sensor > right_sensor) {
+            printf("LEFT WALL FOUND!");
             leftWall = true;
             wallFound = true;
         }
-        else {
+        else if (right_sensor > left_sensor){
+            printf("RIGHT WALL FOUND!");
             leftWall = false;
             wallFound = true;
         }
     }
 
-    int r = rand() % 100;
-    if(front_centre_sensor == 0){
-    if(left_sensor == 0 && right_sensor == 0 && robot->currentSpeed < 3){
-            robot->direction = UP;
+    else {
+
+        if (leftWall) {
+            if (left_sensor < 3) {
+                robot->direction = LEFT;
             }
-        else if(left_sensor == 0 && right_sensor == 0){
-            if(r < 8){
+        }
+        else {
+            if (right_sensor < 3) {
+                robot->direction = RIGHT;
+            }
+        }
+    }
+
+    int r = rand() % 100;
+    if (front_centre_sensor == 0) {
+        if(left_sensor == 0 && right_sensor == 0 && robot->currentSpeed < 3) {
+            robot->direction = UP;
+        }
+        else if (left_sensor == 0 && right_sensor == 0) {
+            if(r < 8) {
                 if (leftWall)
                 robot->direction = LEFT;
                 else
                 robot->direction = RIGHT;
             }
 
-     }}
+        }
+    }
+
 
     if (forwardInterruptTimer != 0) {
         forwardInterruptTimer--;
@@ -386,18 +404,20 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
         robot->direction = LEFT;
     }
     else if (front_centre_sensor != 0) {
-        if (left_sensor <= right_sensor) {
+        if (robot->currentSpeed > 1)
+            robot->direction = DOWN;
+        if (!leftWall) {
             robot->direction = LEFT;
         }
         else {
             robot->direction = RIGHT;
         }
     }
-    else if ((prev_left - left_sensor) > 2) {
+    else if ((prev_left - left_sensor) > 1) {
         forwardInterruptTimer = 2;
         leftInterruptTimer = 6;
     }
-    else if ((prev_right - right_sensor) > 2) {
+    else if ((prev_right - right_sensor) > 1) {
         forwardInterruptTimer = 2;
         rightInterruptTimer = 6;
     }
