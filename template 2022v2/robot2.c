@@ -346,20 +346,7 @@ bool leftWall = true;
 
 void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_sensor, int right_sensor) {
 
-    if (wallFound) {
-        if (leftWall) {
-            if (left_sensor < 4) {
-                robot->direction = LEFT;
-            }
-        }
-        else {
-            if (right_sensor < 4) {
-                robot->direction = RIGHT;
-            }
-        }
-    }
-
-    else {
+    if (!wallFound) {
 
         if (left_sensor > right_sensor) {
             printf("LEFT WALL FOUND!");
@@ -373,6 +360,18 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
         }
     }
 
+    else {
+        if (leftWall) {
+            if (left_sensor < 4) {
+                robot->direction = LEFT;
+            }
+        }
+        else {
+            if (right_sensor < 4) {
+                robot->direction = RIGHT;
+            }
+        }
+    }
 
     int r = rand() % 100;
     if (front_centre_sensor == 0) {
