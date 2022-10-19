@@ -335,6 +335,7 @@ int prev_right;
 
 
 int forwardInterruptTimer = 0;
+int backInterruptTimer = 0;
 int leftInterruptTimer = 0;
 int rightInterruptTimer = 0;
 
@@ -345,6 +346,11 @@ bool leftWall = true;
 
 
 void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_sensor, int right_sensor) {
+
+    if (front_centre_sensor == 0) {
+        if (robot->currentSpeed<4)
+            robot->direction = UP;
+    }
 
     if (!wallFound) {
 
@@ -381,11 +387,11 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
     }
 
     int r = rand() % 100;
-    if (front_centre_sensor == 0) {
-        if(left_sensor == 0 && right_sensor == 0 && robot->currentSpeed < 3) {
+    if (front_centre_sensor == 0 && left_sensor == 0 && right_sensor == 0) {
+        if(robot->currentSpeed < 3) {
             robot->direction = UP;
         }
-        else if (left_sensor == 0 && right_sensor == 0) {
+        else {
             if(r < 8) {
                 if (leftWall)
                 robot->direction = LEFT;
@@ -396,8 +402,11 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
         }
     }
 
-
-    if (forwardInterruptTimer != 0) {
+    if (backInterruptTimer != 0) {
+        backInterruptTimer--;
+        robot->direction = DOWN;
+    }
+    else if (forwardInterruptTimer != 0) {
         forwardInterruptTimer--;
         robot->direction = UP;
     }
@@ -417,7 +426,7 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
     }
     else if (front_centre_sensor != 0) {
         if (robot->currentSpeed > 1)
-            robot->direction = DOWN;
+            backInterruptTimer = robot->currentSpeed + 1;
         if (!leftWall) {
             robot->direction = LEFT;
         }
@@ -439,10 +448,10 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
     else if (right_sensor == 4) {
         robot->direction = LEFT;
     }
-    else if (front_centre_sensor == 0) {
-        if (robot->currentSpeed<2)
-            robot->direction = UP;
-    }
+    // else if (front_centre_sensor == 0) {
+    //     if (robot->currentSpeed<2)
+    //         robot->direction = UP;
+    // }
     else if ((robot->currentSpeed>0) && ((front_centre_sensor >= 1) && (left_sensor == 0) && (right_sensor == 0)) ) {
         robot->direction = DOWN;
     }
