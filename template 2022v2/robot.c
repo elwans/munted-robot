@@ -7,8 +7,8 @@
 void setup_robot(struct Robot *robot){
     robot->x = OVERALL_WINDOW_WIDTH/2-50;
     robot->y = OVERALL_WINDOW_HEIGHT-50;
-    robot->true_x = OVERALL_WINDOW_WIDTH/2-50;
-    robot->true_y = OVERALL_WINDOW_HEIGHT-50;
+    robot->true_x = 117;
+    robot->true_y = OVERALL_WINDOW_HEIGHT-100;
     robot->width = ROBOT_WIDTH;
     robot->height = ROBOT_HEIGHT;
     robot->direction = 0;
@@ -362,7 +362,7 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
 
     if (!wallFound) {
 
-        if (left_sensor > right_sensor) {
+        if (left_sensor >= right_sensor) {
             printf("LEFT WALL FOUND!");
             leftWall = true;
             wallFound = true;
