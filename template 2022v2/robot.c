@@ -414,6 +414,7 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
         backInterruptTimer--;
         robot->direction = DOWN;
     }
+
     else if (front_centre_sensor != 0) {
         if (robot->currentSpeed > 1)
             backInterruptTimer = robot->currentSpeed + 1;
@@ -424,20 +425,5 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
             robot->direction = RIGHT;
         }
     }
-    else if ((robot->currentSpeed>0) && ((front_centre_sensor >= 1) && (left_sensor == 0) && (right_sensor == 0)) ) {
-        robot->direction = DOWN;
-    }
-    else if ((robot->currentSpeed==0) && ((front_centre_sensor >= 1) && (left_sensor == 0)) ) {
-        robot->direction = LEFT;
-    }
-    else if ((robot->currentSpeed>0) && ((right_sensor >= 3)) ) {
-        robot->direction = LEFT;
-    }
-    else if ((robot->currentSpeed>0) && ((left_sensor >= 3)) ) {
-        robot->direction = RIGHT;
-    }
 
-    prev_front = front_centre_sensor;
-    prev_left = left_sensor;
-    prev_right = right_sensor;
 }
