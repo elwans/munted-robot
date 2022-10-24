@@ -5,10 +5,10 @@
 #include <stdbool.h>
 
 void setup_robot(struct Robot *robot){
-    robot->x = OVERALL_WINDOW_WIDTH/2-50;
-    robot->y = OVERALL_WINDOW_HEIGHT-50;
-    robot->true_x = 117;
-    robot->true_y = OVERALL_WINDOW_HEIGHT-100;
+    robot->x = 640-10-170;
+    robot->y = 460;
+    robot->true_x = 640-10-170;
+    robot->true_y = 460;
     robot->width = ROBOT_WIDTH;
     robot->height = ROBOT_HEIGHT;
     robot->direction = 0;
@@ -19,6 +19,8 @@ void setup_robot(struct Robot *robot){
 
     printf("Press arrow keys to move manually, or enter to move automatically\n\n");
 }
+
+
 int robot_off_screen(struct Robot * robot){
     if(robot->x < 0 || robot-> y < 0){
         return 0;
@@ -362,12 +364,12 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
 
     if (!wallFound) {
 
-        if (left_sensor >= right_sensor) {
+        if (left_sensor >= 2) { // previously (left_sensor >= right_sensor)
             printf("LEFT WALL FOUND!");
             leftWall = true;
             wallFound = true;
         }
-        else if (right_sensor > left_sensor){
+        else if (right_sensor >= 2) { // previously (right_sensor > left_sensor)
             printf("RIGHT WALL FOUND!");
             leftWall = false;
             wallFound = true;
@@ -383,6 +385,9 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
             if (left_sensor >= 3) {
                 robot->direction = RIGHT;
             }
+            if (right_sensor >= 3) { // new
+                robot->direction = LEFT;
+            }
         }
         else {
             if (right_sensor < 2) {
@@ -390,6 +395,9 @@ void robotAutoMotorMove(struct Robot * robot, int front_centre_sensor, int left_
             }
             if (right_sensor >= 3) {
                 robot->direction = LEFT;
+            }
+            if (left_sensor >= 3) { // new
+                robot->direction = RIGHT;
             }
         }
     }
